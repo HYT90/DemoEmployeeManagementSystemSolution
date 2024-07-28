@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Syncfusion.Blazor.Buttons" Version="23.1.36" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="23.1.36" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="23.1.36" />
+    <PackageReference Include="Syncfusion.Blazor.Popups" Version="23.1.36" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="23.1.36" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
+    <ProjectReference Include="..\ClientLibrary\ClientLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ContentPages\DepartmentPages\DepartmentDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\ContentPages\DepartmentPages\DepartmentDialog.razor" />
+    <_ContentIncludedByDefault Remove="Pages\ContentPages\EmployeePages\EmployeeDetailPage.razor" />
+    <_ContentIncludedByDefault Remove="Pages\OtherPages\ContextMenu.razor" />
+    <_ContentIncludedByDefault Remove="Pages\OtherPages\DoctorPages\DoctorPage.razor" />
+    <_ContentIncludedByDefault Remove="Pages\OtherPages\OvertimePages\OvertimeDialog.razor" />
+    <_ContentIncludedByDefault Remove="Pages\OtherPages\OvertimePages\OvertimeTypeDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\OtherPages\ContextMenu.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ContentPages\EmployeePages\EmployeeDetailPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\OtherPages\DoctorPages\DoctorPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\OtherPages\OvertimePages\OvertimeDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\OtherPages\OvertimePages\OvertimeTypeDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\background\bg.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,53 @@
+﻿@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@inject SfDialogService dialogService
+
+<SfDialog Width="350px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+
+    <DialogTemplates>
+        <Header>@Title Department</Header>
+        <Content>
+            <EditForm Model="generalDepartment" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <label class="form-label">Name</label>
+                        <InputText @bind-Value="generalDepartment.Name" class="form-content" />
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save"/>
+    </DialogButtons>
+</SfDialog>
+
+@code {
+    // 做為這個component的標籤屬性, 可以傳遞其他component的欄位或方法進來
+    // 如 其他component中加入 <此component generalDepartment="其他component的同類別欄位名" />
+    // generalDepartment將會被指派由其他component傳遞來的值
+    [Parameter] public GeneralDepartment generalDepartment { get; set; } = new();
+    [Parameter] public EventCallback<GeneralDepartment> HandleSaveOperationEvent{ get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        if (string.IsNullOrEmpty(generalDepartment.Name))
+            await dialogService.AlertAsync("You need to provide Department name.", "Alert!");
+        else
+            await HandleSaveOperationEvent.InvokeAsync(generalDepartment);
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+}

@@ -1,0 +1,82 @@
+﻿@inject SfDialogService dialogService
+
+<SfDialog Width="280px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+
+    <DialogTemplates>
+        <Header>@Title Town</Header>
+        <Content>
+            <EditForm Model="Town" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Id</label>
+                            <input @bind="Town.Id" class="form-control" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <InputText @bind-Value="Town.Name" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select City</label>
+
+                            @if (Town.City != null)
+                            {
+                                string selected = Town.City!.Name;
+                                    <SfDropDownList TValue="string" TItem="City" Placeholder="@selected" DataSource="Cities">
+                                        <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="string" TItem="City" ValueChange="OnValueChange"></DropDownListEvents>
+                                    </SfDropDownList>
+                            }
+                            else
+                            {
+                                    <SfDropDownList TValue="string" TItem="City" Placeholder="Select Country" DataSource="Cities">
+                                        <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="string" TItem="City" ValueChange="OnValueChange"></DropDownListEvents>
+                                    </SfDropDownList>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+
+@code {
+    // 做為這個component的標籤屬性, 可以傳遞其他component的欄位或方法進來
+    // 如 其他component中加入 <此component generalDepartment="其他component的同類別欄位名" />
+    // generalDepartment將會被指派由其他component傳遞來的值
+    [Parameter] public Town Town { get; set; } = new();
+    [Parameter] public List<City> Cities { get; set; } = new();
+    [Parameter] public EventCallback<Town> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        if (string.IsNullOrEmpty(Town.Name) || Town.CityId <= 0)
+            await dialogService.AlertAsync("You need to provide Department name.", "Alert!");
+        else
+            await HandleSaveOperationEvent.InvokeAsync(Town);
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+
+    public void OnValueChange(ChangeEventArgs<string, City> args)
+    {
+        Town.CityId = int.Parse(args.Value);
+    }
+}
