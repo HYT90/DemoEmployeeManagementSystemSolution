@@ -41,8 +41,24 @@
                                         <GridColumn Field=@nameof(Employee.Name) HeaderText="Name"></GridColumn>
                                         <GridColumn Field=@nameof(Employee.TelephoneNumber) HeaderText="Telephone"></GridColumn>
                                         <GridColumn Field=@nameof(Employee.JobName) HeaderText="Job Name"></GridColumn>
-                                        <GridColumn Field=@nameof(Employee.Branch.Name) HeaderText="Branch"></GridColumn>
-                                        <GridColumn Field=@nameof(Employee.Town.Name) HeaderText="Town"></GridColumn>
+                                        <GridColumn HeaderText="Branch">
+                                            <Template>
+                                            @{
+                                                var employee = (context as Employee);
+                                                var name = DefaultBranches.First(x => x.Id == employee.BranchId).Name;
+                                                <div>@name</div>
+                                            }
+                                            </Template>
+                                        </GridColumn>
+                                        <GridColumn HeaderText="Town">
+                                        <Template>
+                                            @{
+                                                var employee = (context as Employee);
+                                                var name = DefaultTowns.First(x => x.Id == employee.TownId).Name;
+                                                <div>@name</div>
+                                            }
+                                        </Template>
+                                        </GridColumn>
                                         <GridColumn HeaderText="Menu" HeaderTextAlign="TextAlign.Left">
                                             <Template>
                                             @{
