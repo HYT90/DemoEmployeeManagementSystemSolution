@@ -52,6 +52,8 @@ builder.Services.AddScoped<IGenericServiceInterface<VacationType>, GenericServic
 builder.Services.AddScoped<IGenericServiceInterface<SanctionType>, GenericServiceImplementation<SanctionType>>();
 builder.Services.AddScoped<IGenericServiceInterface<OvertimeType>, GenericServiceImplementation<OvertimeType>>();
 
+builder.Services.AddScoped<UserProfileState>();
+
 builder.Services.AddScoped<AllState>();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<SfDialogService>();

@@ -11,17 +11,18 @@
             <EditForm Model="generalDepartment" Enhance OnSubmit="Save">
                 <div class="card border-success">
                     <div class="card-body">
-                        <label class="form-label">Name</label>
-                        <InputText @bind-Value="generalDepartment.Name" class="form-content" />
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <InputText @bind-Value="generalDepartment.Name" class="form-content" />
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary float-end" type="submit">SAVE</button>
                     </div>
                 </div>
             </EditForm>
         </Content>
     </DialogTemplates>
-
-    <DialogButtons>
-        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save"/>
-    </DialogButtons>
 </SfDialog>
 
 @code {

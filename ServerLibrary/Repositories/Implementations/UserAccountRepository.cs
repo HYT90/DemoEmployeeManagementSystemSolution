@@ -177,5 +177,20 @@ namespace ServerLibrary.Repositories.Implementations
         private async Task<List<SystemRole>> SystemRoles() => await app.SystemRoles.AsNoTracking().ToListAsync();
         private async Task<List<UserRole>> UserRoles() => await app.UserRoles.AsNoTracking().ToListAsync();
         private async Task<List<ApplicationUser>> GetApplicationUsers() => await app.ApplicationUsers.AsNoTracking().ToListAsync();
+
+        public async Task<string> GetUserImage(int id)
+        {
+            return (await GetApplicationUsers()).FirstOrDefault(x => x.Id == id)!.Image;
+        }
+
+        public async Task<bool> UpdateProfile(UserProfile profile)
+        {
+            var user = await app.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == int.Parse(profile.Id));
+            user!.Email = profile.Email;
+            user.Fullname = profile.Name;
+            user.Image = profile.Image;
+            await app.SaveChangesAsync();
+            return true;
+        }
     }
 }

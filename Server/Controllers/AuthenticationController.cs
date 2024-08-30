@@ -7,10 +7,10 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class AuthenticationController(IUserAccount userAccount) : Controller
     {
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateAsync(Register user)
         {
             if (user == null) return BadRequest("Model is empty");
@@ -19,6 +19,7 @@ namespace Server.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> SignInAsync(Login user)
         {
             if (user == null) return BadRequest("Model is empty");
@@ -27,6 +28,7 @@ namespace Server.Controllers
         }
 
         [HttpPost("refresh-token")]
+        [AllowAnonymous]
         public async Task<IActionResult> RefreshTokenAsync(RefreshToken token)
         {
             if (token == null) return BadRequest("Model is empty");
@@ -35,6 +37,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("users")]
+        [Authorize]
         public async Task<IActionResult> GetUserAsync()
         {
             var users = await userAccount.GetUsers();
@@ -43,6 +46,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("roles")]
+        [Authorize]
         public async Task<IActionResult> GetRoles()
         {
             var roles = await userAccount.GetRoles();
@@ -51,6 +55,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("delete-user/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var res = await userAccount.DeleteUser(id);
@@ -58,9 +63,25 @@ namespace Server.Controllers
         }
 
         [HttpPut("update-user")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(ManageUser user)
         {
             var res = await userAccount.UpdateUser(user);
+            return Ok(res);
+        }
+
+        [HttpGet("user-image/{id}")]
+        public async Task<IActionResult> GetUserImage(int id)
+        {
+            var result = await userAccount.GetUserImage(id);
+            return Ok(result);
+        }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfiler(UserProfile profile)
+        {
+            var res = await userAccount.UpdateProfile(profile);
             return Ok(res);
         }
     }

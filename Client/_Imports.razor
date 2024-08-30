@@ -21,6 +21,7 @@
 @using Client.Pages.OtherPages.OvertimePages
 @using Client.Pages.OtherPages.SanctionPages
 @using Client.Pages.OtherPages.VacationPages
+@using Client.Pages.ContentPages.ProfilePages
 @using BaseLibrary.DTOs
 @using BaseLibrary.Entities
 @using ClientLibrary.Helpers
@@ -55,4 +56,8 @@
 @inject IGenericServiceInterface<SanctionType> stService
 @inject IGenericServiceInterface<Overtime> overtimeService
 @inject IGenericServiceInterface<OvertimeType> otService
+
+@inject UserProfileState userProfileState
+
+@inject GetHttpClient getHttpClient
 

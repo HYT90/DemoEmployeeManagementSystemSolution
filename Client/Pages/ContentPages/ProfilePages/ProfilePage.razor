@@ -1,0 +1,138 @@
+﻿@using System.Security.Claims
+@implements IDisposable
+@if (allState.ShowUserProfile)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <EditForm Model="userProfileState" Enhance OnValidSubmit="UpdateProfile">
+                    <DataAnnotationsValidator />
+                    <div class="card border-sucess shadow-lg">
+                        <div class="card-header">
+                            Personal Information
+                        </div>
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6 d-flex justify-content-center">
+                                        <div class="vstack gap-2">
+                                            <img style="width:100px;height:100px;border-radius:50%" src="@userProfileState.userProfile.Image" />
+                                            <InputFile OnChange="UploadImage" class="form-control" />
+                                        </div>
+                                    </div>
+                                <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Id</label>
+                            <input type="text" value="@userProfileState.userProfile.Id" class="form-control" disabled />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="form-label">Name</label>
+                            <InputText @bind-Value="userProfileState.userProfile.Name" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" @bind="userProfileState.userProfile.Email" class="form-control" />
+                        </div>
+                        <div class="form-group mt-4">
+                            @if (ShowSpinner)
+                            {
+                                <ButtonLoadingSpinner />
+                            }else{
+                                <button class="btn btn-primary float-end" type="submit">SAVE</button>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <ValidationSummary />
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+}
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        await UserDetails();
+        allState.Action += StateHasChanged;
+        userProfileState.Action += StateHasChanged;
+    }
+
+    public bool ShowSpinner { get; set; } = false;
+    private async Task UserDetails()
+    {
+        try
+        {
+            var client = await getHttpClient.GetPrivateHttpClient();
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            userProfileState.userProfile.Id = authState.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)!.Value;
+            userProfileState.userProfile.Name = authState.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
+            userProfileState.userProfile.Email = authState.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)!.Value;
+            var response = await client.GetAsync($"api/authentication/user-image/{userProfileState.userProfile.Id}");
+            if (!response.IsSuccessStatusCode)
+                return;
+
+            var result = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(result))
+                return;
+            else
+                userProfileState.userProfile.Image = result!;
+        }catch{}
+    }
+
+    async Task UpdateProfile()
+    {
+        if (userProfileState.userProfile.Image == "../images/profiles/defaultProfile.jpg")
+        {
+            await dialogService.AlertAsync("Add profile image.", "Alert!");
+            return;
+        }
+        ShowSpinner = true;
+        var client = await getHttpClient.GetPrivateHttpClient();
+        var response = await client.PutAsJsonAsync("api/authentication/update-profile", userProfileState.userProfile);
+        if (!response.IsSuccessStatusCode)
+        {
+            ShowSpinner = false;
+            return;
+        }
+        var result = await response.Content.ReadFromJsonAsync<bool>();
+        if (result)
+        {
+            ShowSpinner = false;
+            await dialogService.AlertAsync("Profile update.", "Success");
+            userProfileState.ProfileUpdated();
+        }
+        ShowSpinner = false;
+    }
+
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var t = e.File.Name.ToLower();
+        if (t.Contains(".png") || t.Contains(".jpg"))
+        {
+            var format = "image/png";
+            var resizeImage = await e.File.RequestImageFileAsync(format, 300, 300);
+            var buffer = new byte[resizeImage.Size];
+            await resizeImage.OpenReadStream().ReadAsync(buffer);
+            var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            userProfileState.userProfile.Image = imageData;
+            imageData = "";
+            return;
+        }
+        await dialogService.AlertAsync("PNG/JPG file needed.", "Alert");
+        return;
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+        userProfileState.Action -= StateHasChanged;
+    }
+}
