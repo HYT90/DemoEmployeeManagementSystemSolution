@@ -2,7 +2,6 @@
 using BaseLibrary.Responses;
 using ClientLibrary.Helpers;
 using ClientLibrary.Services.Contracts;
-using System.Diagnostics;
 using System.Net.Http.Json;
 
 namespace ClientLibrary.Services.Implementations
