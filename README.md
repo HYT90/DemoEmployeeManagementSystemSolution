@@ -1,6 +1,6 @@
 # 人員資料管理應用程式
 後端資料庫程式以SQL server及ASP.NET Web API建立。
-前端頁面程式以ASP.NET Blazor建立。
+前端網頁以ASP.NET Blazor建立。
 ## 功能
 
 - **註冊**：新用戶可以註冊帳戶。
