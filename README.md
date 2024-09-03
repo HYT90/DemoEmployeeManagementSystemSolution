@@ -1,4 +1,4 @@
-# 人員資料管理應用程式
+# 人員資料管理系統
 後端資料庫程式以SQL server及ASP.NET Web API建立。
 前端網頁以ASP.NET Blazor建立。
 ## 功能
