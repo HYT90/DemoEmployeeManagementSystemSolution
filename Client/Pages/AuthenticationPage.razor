@@ -2,7 +2,8 @@
 @inject NavigationManager MavManager
 
 @code{
-    //由位於app.razor的父組件，<CascadingAuthenticationState>調用 AuthenticationStateProvider 的 GetAuthenticationStateAsync() ，
+    //由位於app.razor的父組件<CascadingAuthenticationState>，
+    //繼承該組件的子組件 [CascadingParameter] 標籤的 Task<AuthenticationState> 欄位會調用 AuthenticationStateProvider 的 GetAuthenticationStateAsync() ，
     //取得 Task<AuthenticationState> 類型指派給 AuthenticationState
     [CascadingParameter] public Task<AuthenticationState> AuthenticationState{ get; set; }
     protected async override Task OnInitializedAsync()
