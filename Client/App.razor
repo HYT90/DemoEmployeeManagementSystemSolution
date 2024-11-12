@@ -11,7 +11,11 @@
     </NotFound>
 </Router>
  *@
-@using Microsoft.AspNetCore.Components.Authorization
+@* @using Microsoft.AspNetCore.Components.Authorization *@
+@* <CascadingAuthenticationState> 
+    是 Blazor 中的一個組件，用於將身份驗證狀態作為級聯參數傳遞給其子組件。
+    這個組件通常用於需要訪問身份驗證狀態的組件，例如 AuthorizeView 和 Router 組件。
+    此處<CascadingAuthenticationState> 組件將身份驗證狀態傳遞給 AuthorizeRouteView 組件，後者根據用戶的身份驗證狀態顯示不同的內容。 *@
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">

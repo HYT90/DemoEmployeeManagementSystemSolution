@@ -27,6 +27,7 @@ namespace Server.Controllers
             return Ok(res);
         }
 
+        //Refresh Token
         [HttpPost("refresh-token")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshTokenAsync(RefreshToken token)

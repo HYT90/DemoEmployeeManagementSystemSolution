@@ -17,6 +17,9 @@
 <VacationTypePage></VacationTypePage>
 <ProfilePage></ProfilePage>
 @code {
+    //[CascadingParameter]允許參數在組件樹中進行傳遞，而不需要顯式地通過每個組件的參數進行傳遞。
+    //此處是由app.razor中的 <CascadingAuthenticationState> 為父組件, 
+    //將身份驗證狀態作為級聯參數傳遞給其子組件。這個組件通常用於需要訪問身份驗證狀態的組件，例如 AuthorizeView 和 Router 組件。
     [CascadingParameter] public Task<AuthenticationState>? AuthenticationState { get; set; }
     protected async override Task OnInitializedAsync()
     {

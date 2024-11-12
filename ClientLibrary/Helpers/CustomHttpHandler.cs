@@ -19,13 +19,14 @@ namespace ClientLibrary.Helpers
             bool registerUrl = request.RequestUri!.AbsoluteUri.Contains("register");
             bool refreshTokenUrl = request.RequestUri!.AbsoluteUri.Contains("refresh-token");
 
+            //如果request的URI為以上三者那就是server預設的認證request, 請求 註冊 或者 登入
             if (loginUrl || registerUrl || refreshTokenUrl) 
                 return await base.SendAsync(request, cancellationToken);
 
             var res = await base.SendAsync(request, cancellationToken);
             if(res.StatusCode == HttpStatusCode.Unauthorized)
             {
-                //Get token from local storage first
+                //Get (UserSession)token from local storage first
                 var stringToken = await localStorageService.GetToken();
                 if (stringToken == null) return res;
                 //Check if the header contains token

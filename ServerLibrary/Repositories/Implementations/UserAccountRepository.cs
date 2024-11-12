@@ -99,6 +99,7 @@ namespace ServerLibrary.Repositories.Implementations
         private async Task<UserRole> FindUserRole(int userId) => await app.UserRoles.FirstOrDefaultAsync(x => x.UserId == userId);
         private async Task<SystemRole> FindRoleName(int roleId) => await app.SystemRoles.FirstOrDefaultAsync(x => x.Id == roleId);
 
+        //調用 RandomNumberGenerator.GetBytes(64) 產生一隨機數轉換並傳回字串
         private string GenerateRefreshToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
         private async Task<ApplicationUser> FindUserByEmail(string email)
@@ -116,17 +117,21 @@ namespace ServerLibrary.Repositories.Implementations
         public async Task<LoginResponse> RefreshTokenAsync(RefreshToken token)
         {
             if (token is null) return new LoginResponse(false, "Model is empty");
-            
+
+            //查詢資料庫 RefreshTokenInfos資料表
             var findToken = await app.RefreshTokenInfos.FirstOrDefaultAsync(x => x.Token!.Equals(token.Token));
             if (findToken is null) return new LoginResponse(false, "Invalid RefreshToken");
 
-            // get user details
+            //由 findToken 查詢結果找出映射關係的 UserId 使用者資料
             var user = await app.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == findToken.UserId);
             if (user is null) return new LoginResponse(false, "User not found, no refresh token is generated");
 
-            var userRole = await FindUserRole(user.Id);
-            var roleName = await FindRoleName(userRole.RoleId);
+            //建立 JWT
+            var userRole = await FindUserRole(user.Id); //查詢 user-role表 結果得出user的 roleId
+            var roleName = await FindRoleName(userRole.RoleId);//查詢 SystemRole表 結果得出 role 的名稱
             string jwt = GenerateToken(user, roleName.Name!);
+
+            //用來做為刷新這個 user 上次存取時儲存舊的 refresh token
             string refreshToken = GenerateRefreshToken();
 
             var updateRefreshToken = await app.RefreshTokenInfos.FirstOrDefaultAsync(x => x.UserId == user.Id);
