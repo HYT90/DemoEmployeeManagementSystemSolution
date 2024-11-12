@@ -37,6 +37,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         //時鐘偏移量是用來處理兩個系統之間的時間差異。
+        //處理由於不同系統之間的時鐘不完全同步所引起的時間誤差。這種時間誤差可能會導致認證令牌（token）過早或過晚失效。
         //例如，如果你有兩個驗證伺服器，它們的系統時間可能會有幾分鐘的差異。
         //在這種情況下，一個伺服器可能會認為令牌已經過期，而另一個伺服器則不會。
         //因此，ClockSkew 可以幫助確保即使在這種時間差異的情況下，令牌的驗證也能正確地進行。
