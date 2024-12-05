@@ -15,5 +15,5 @@
 
 ## JWT 
 
-使用 JSON Web Token (JWT) 來優化使用者體驗。當使用者登入後，系統會發送一個 JWT( User Session ) 給使用者。使用者可以使用這個 JWT 來存取受保護的路由和服務，而無需再次登入。
+使用 JSON Web Token (JWT) 來改善使用者體驗。當使用者登入後，系統會發送一個 JWT( User Session ) 給使用者。使用者可以使用這個 JWT 來存取受保護的路由和服務，而無需再次登入。
 
